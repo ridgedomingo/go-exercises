@@ -18,10 +18,10 @@ var(
 
 func Start() {
 	flag.UintVar(&length, "length", 0, "password length, no negative values")
-	flag.BoolVar(&isNumbersIncluded, "includeNumbers", false, "should include numbers")
-	flag.BoolVar(&isSymbolsIncluded, "includeSymbols", false, "should include symbols")
-	flag.BoolVar(&isUppercaseIncluded, "includeUppercase", false, "should include uppercase")
-	flag.StringVar(&passwordType, "type", "random", "password type")
+	flag.BoolVar(&isNumbersIncluded, "includeNumbers", false, "set to true if password should include numbers")
+	flag.BoolVar(&isSymbolsIncluded, "includeSymbols", false, "set to true if password should include symbols")
+	flag.BoolVar(&isUppercaseIncluded, "includeUppercase", false, "set to true if password should include uppercase")
+	flag.StringVar(&passwordType, "type", "random", "password type, valid values are random,alphanumeric,pin")
 	flag.Parse()
 
 	password := generatePassword()
