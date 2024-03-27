@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ridge/domingo/go-exercises/generator"
+	"github.com/ridgedomingo/go-exercises/generator"
 )
 
 func main() {

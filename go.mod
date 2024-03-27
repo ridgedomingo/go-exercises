@@ -1,3 +1,3 @@
-module github.com/ridge/domingo/go-exercises
+module github.com/ridgedomingo/go-exercises
 
 go 1.22.0

@@ -9,7 +9,7 @@ import (
 )
 
 var(
-	length int
+	length uint
     isNumbersIncluded bool
     isSymbolsIncluded bool
     isUppercaseIncluded bool
@@ -17,8 +17,7 @@ var(
 )
 
 func Start() {
-
-	flag.IntVar(&length, "length", 0, "password length")
+	flag.UintVar(&length, "length", 0, "password length, no negative values")
 	flag.BoolVar(&isNumbersIncluded, "includeNumbers", false, "should include numbers")
 	flag.BoolVar(&isSymbolsIncluded, "includeSymbols", false, "should include symbols")
 	flag.BoolVar(&isUppercaseIncluded, "includeUppercase", false, "should include uppercase")
@@ -43,7 +42,8 @@ func generatePassword() string {
 }
 
 func generateSecurePassword() string {
-	passwordLength := 12
+	passwordLength:= uint(12)
+
 	if length >= 1 {
 		passwordLength = length
 	}
@@ -70,7 +70,7 @@ func generateSecurePassword() string {
 	}
 
 	password := make([]byte, passwordLength)
-	for i := 0; i < passwordLength; i++ {
+	for i := uint(0); i < passwordLength; i++ {
 		// Convert random byte to index in the character set
 		randomIndex := int(randomBytes[i]) % charsetLen
 		password[i] = charset[randomIndex]
@@ -81,7 +81,7 @@ func generateSecurePassword() string {
 
 func generatePin() string {
 	// default pin to 6 digits
-	pinLength := 6
+	pinLength := uint(6)
 
 	if length >= 1 {
 		pinLength = length
@@ -97,12 +97,12 @@ func generatePin() string {
 }
 
 // Function to calculate power
-func pow(x, y int) int {
+func pow(x, y uint) uint {
 	if y == 0 {
 		return 1
 	}
 	result := x
-	for i := 1; i < y; i++ {
+	for i := uint(1); i < y; i++ {
 		result *= x
 	}
 	return result
