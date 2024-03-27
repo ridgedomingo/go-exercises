@@ -26,23 +26,57 @@ func Start() {
 	flag.Parse()
 
 	password := generatePassword()
-	fmt.Println("Generated password", password)
+	fmt.Println("Generated password: ", password)
 
 }
 
 func generatePassword() string {
 	var generatedPassword string
-	switch passwordType {
-    case "random":
-		  // TO DO: Func to create random password
-    case "alphanumeric":
-		  // TO DO: Func to create alphanumeric password
-    case "pin":
-		  // TO DO: Func to create pin
+
+	if passwordType == "pin" {
 		generatedPassword = generatePin()
-    }
+	} else {
+		generatedPassword = generateSecurePassword()
+	}
 
 	return generatedPassword
+}
+
+func generateSecurePassword() string {
+	passwordLength := 12
+	if length >= 1 {
+		passwordLength = length
+	}
+	charset := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	
+	if passwordType == "alphanumeric" {
+			charset += "0123456789"
+	} else {
+		if isSymbolsIncluded {
+			charset += "!@#$%^&*()-_=+"
+		}
+		if isNumbersIncluded{
+			charset += "0123456789"
+		}
+	}
+
+	charsetLen := len(charset)
+
+	randomBytes := make([]byte, passwordLength)
+
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	password := make([]byte, passwordLength)
+	for i := 0; i < passwordLength; i++ {
+		// Convert random byte to index in the character set
+		randomIndex := int(randomBytes[i]) % charsetLen
+		password[i] = charset[randomIndex]
+	}
+
+	return string(password) 
 }
 
 func generatePin() string {
