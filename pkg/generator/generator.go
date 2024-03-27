@@ -47,7 +47,7 @@ func generateSecurePassword() string {
 	if length >= 1 {
 		passwordLength = length
 	}
-	charset := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	charset := "abcdefghijklmnopqrstuvwxyz"
 	
 	if passwordType == "alphanumeric" {
 			charset += "0123456789"
@@ -58,6 +58,10 @@ func generateSecurePassword() string {
 		if isNumbersIncluded{
 			charset += "0123456789"
 		}
+	}
+
+	if isUppercaseIncluded {
+		charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	}
 
 	charsetLen := len(charset)
