@@ -9,11 +9,11 @@ import (
 )
 
 var(
-	length uint
-    isNumbersIncluded bool
-    isSymbolsIncluded bool
-    isUppercaseIncluded bool
-	passwordType string
+	flagLength uint
+    flagIsNumbersIncluded bool
+    flagIsSymbolsIncluded bool
+    flagIsUppercaseIncluded bool
+	flagPasswordType string
 )
 
 type PasswordParams struct {
@@ -25,19 +25,19 @@ type PasswordParams struct {
 }
 
 func Start() {
-	flag.UintVar(&length, "length", 0, "password length, no negative values")
-	flag.BoolVar(&isNumbersIncluded, "includeNumbers", false, "set to true if password should include numbers")
-	flag.BoolVar(&isSymbolsIncluded, "includeSymbols", false, "set to true if password should include symbols")
-	flag.BoolVar(&isUppercaseIncluded, "includeUppercase", false, "set to true if password should include uppercase")
-	flag.StringVar(&passwordType, "type", "random", "password type, valid values are random,alphanumeric,pin")
+	flag.UintVar(&flagLength, "length", 0, "password length, no negative values")
+	flag.BoolVar(&flagIsNumbersIncluded, "includeNumbers", false, "set to true if password should include numbers")
+	flag.BoolVar(&flagIsSymbolsIncluded, "includeSymbols", false, "set to true if password should include symbols")
+	flag.BoolVar(&flagIsUppercaseIncluded, "includeUppercase", false, "set to true if password should include uppercase")
+	flag.StringVar(&flagPasswordType, "type", "random", "password type, valid values are random,alphanumeric,pin")
 	flag.Parse()
 
 	passwordParams := PasswordParams{
-		Length: length,
-		PasswordType: passwordType,
-		IsNumbersIncluded: isNumbersIncluded,
-		IsSymbolsIncluded: isSymbolsIncluded,
-		IsUppercaseIncluded: isUppercaseIncluded,
+		Length: flagLength,
+		PasswordType: flagPasswordType,
+		IsNumbersIncluded: flagIsNumbersIncluded,
+		IsSymbolsIncluded: flagIsSymbolsIncluded,
+		IsUppercaseIncluded: flagIsUppercaseIncluded,
 	}
 	password := GeneratePassword(passwordParams)
 	fmt.Println("Generated password: ", password)
@@ -47,16 +47,29 @@ func Start() {
 func GeneratePassword(options ...PasswordParams) string {
 	var generatedPassword string
 
-	if passwordType == "pin" {
-		generatedPassword = generatePin()
+	var opt PasswordParams
+	if len(options) > 0 {
+		opt = options[0]
 	} else {
-		generatedPassword = generateSecurePassword()
+		opt = PasswordParams{
+			Length: 0,
+			IsNumbersIncluded: false,
+			IsSymbolsIncluded: false,
+			IsUppercaseIncluded: false,
+			PasswordType: "random",
+		}
+	}
+
+	if opt.PasswordType == "pin" {
+		generatedPassword = generatePin(opt.Length)
+	} else {
+		generatedPassword = generateSecurePassword(opt.Length, opt.IsSymbolsIncluded, opt.IsNumbersIncluded, opt.IsUppercaseIncluded, opt.PasswordType)
 	}
 
 	return generatedPassword
 }
 
-func generateSecurePassword() string {
+func generateSecurePassword(length uint, isSymbolsIncluded bool, isNumbersIncluded bool, isUppercaseIncluded bool, passwordType string) string {
 	passwordLength:= uint(12)
 
 	if length >= 1 {
@@ -98,10 +111,10 @@ func generateSecurePassword() string {
 	return string(password) 
 }
 
-func generatePin() string {
+func generatePin(length uint) string {
 	// default pin to 6 digits
 	pinLength := uint(6)
-
+	
 	if length >= 1 {
 		pinLength = length
 	}
