@@ -16,6 +16,14 @@ var(
 	passwordType string
 )
 
+type PasswordParams struct {
+	Length uint
+	PasswordType string
+	IsNumbersIncluded bool
+	IsSymbolsIncluded bool
+	IsUppercaseIncluded bool
+}
+
 func Start() {
 	flag.UintVar(&length, "length", 0, "password length, no negative values")
 	flag.BoolVar(&isNumbersIncluded, "includeNumbers", false, "set to true if password should include numbers")
@@ -24,12 +32,19 @@ func Start() {
 	flag.StringVar(&passwordType, "type", "random", "password type, valid values are random,alphanumeric,pin")
 	flag.Parse()
 
-	password := GeneratePassword()
+	passwordParams := PasswordParams{
+		Length: length,
+		PasswordType: passwordType,
+		IsNumbersIncluded: isNumbersIncluded,
+		IsSymbolsIncluded: isSymbolsIncluded,
+		IsUppercaseIncluded: isUppercaseIncluded,
+	}
+	password := GeneratePassword(passwordParams)
 	fmt.Println("Generated password: ", password)
 
 }
 
-func GeneratePassword(length uint, isNumbersIncluded bool, isSymbolsIncluded bool, isUppercaseIncluded bool, passwordType string) string {
+func GeneratePassword(options ...PasswordParams) string {
 	var generatedPassword string
 
 	if passwordType == "pin" {
