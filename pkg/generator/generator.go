@@ -24,12 +24,12 @@ func Start() {
 	flag.StringVar(&passwordType, "type", "random", "password type, valid values are random,alphanumeric,pin")
 	flag.Parse()
 
-	password := generatePassword()
+	password := GeneratePassword()
 	fmt.Println("Generated password: ", password)
 
 }
 
-func generatePassword() string {
+func GeneratePassword(length uint, isNumbersIncluded bool, isSymbolsIncluded bool, isUppercaseIncluded bool, passwordType string) string {
 	var generatedPassword string
 
 	if passwordType == "pin" {
